@@ -18,25 +18,76 @@ namespace tdd_kata.matrix
          * 
          */
         [Test]
-        public void ICanAddTwoVectors()
+        public void GivenTwoVectorsThenAdd()
         {
             int[] firstVector = { 1, 2, 3, 4 };
             int[] secondVector = { 1, 2, 3, 4 };
-            int[] expected = {2,4,6,8};
+            int[] expectedVector = {2,4,6,8};
 
             var result = AddTwoVectors(firstVector, secondVector);
 
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expectedVector, result);
         }
+
+        [Test]        
+        public void IfVectorDimentionAreNotEqual()
+        {
+            int[] firstVector = { 1, 2, 3 };
+            int[] secondVector = { 1, 2 };            
+
+            Assert.Throws<DiffrentDimensionException>(() => AddTwoVectors(firstVector, secondVector));
+        }
+
+        [Test]
+        public void GivenTwoVectorsThenSubtract()
+        {
+            int[] firstVector = { 1, 2, 3, 4 };
+            int[] secondVector = { 2, 3, 4, 5 };
+            int[] expectedVector = { -1, -1, -1, -1 };
+
+            var result = SubtractTwoVectors(firstVector, secondVector);
+
+            Assert.AreEqual(expectedVector, result);
+
+        }       
+
+        private int[] SubtractTwoVectors(int[] firstVector, int[] secondVector)
+        {
+            if (firstVector.Length != secondVector.Length)
+            {
+                throw new DiffrentDimensionException();
+            }
+
+            int[] subtracted = new int[firstVector.Length];
+
+            for (int i = 0; i < firstVector.Length; i++)
+            {
+                subtracted[i] = firstVector[i] - secondVector[i];
+            }
+
+            return subtracted;
+        }
+
 
         private int[] AddTwoVectors(int[] firstVector, int[] secondVector)
         {
+            if (firstVector.Length != secondVector.Length)
+            {
+                throw new DiffrentDimensionException();
+            }
+
             int[] sumeUp = new int[firstVector.Length];
+
             for (int i = 0; i < firstVector.Length; i++)
             {
                 sumeUp[i] = firstVector[i] + secondVector[i];
             }
             return sumeUp;
+        }
+
+        public class DiffrentDimensionException : Exception
+        {
+
         }
     }
 }

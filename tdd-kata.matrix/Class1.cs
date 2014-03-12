@@ -76,6 +76,28 @@ namespace tdd_kata.matrix
             Assert.AreEqual(expectedValue, result);
         }
 
+        [Test]
+        public void GivenVectorThenFindLenght()
+        {
+            int[] vector = { 2, 2, 1 };
+            double expectedLenghtOfVector = 3;
+
+            var result = LenghtOfVector(vector);
+
+            Assert.AreEqual(expectedLenghtOfVector, result);
+        }
+
+        private double LenghtOfVector(int[] vector)
+        {
+            double sumUp = 0;
+            for (int i = 0; i < vector.Length; i++)
+            {
+                sumUp += vector[i] * vector[i];
+            }
+
+            return Math.Sqrt(sumUp);
+        }
+
         private int ScalarMultiply(int[] firstVector, int[] secondVector)
         {
             int result = 0;

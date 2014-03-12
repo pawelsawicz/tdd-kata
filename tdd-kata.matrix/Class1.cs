@@ -64,6 +64,30 @@ namespace tdd_kata.matrix
             Assert.AreEqual(expectedVector, result);
         }
 
+        [Test]
+        public void GivenTwoVectorsThenScalarMultiply()
+        {
+            int[] firstVector = { 1, 2, 3, 4 };
+            int[] secondVector = { 7, 3, 7, 5 };
+            int expectedValue = 54;
+
+            var result = ScalarMultiply(firstVector, secondVector);
+
+            Assert.AreEqual(expectedValue, result);
+        }
+
+        private int ScalarMultiply(int[] firstVector, int[] secondVector)
+        {
+            int result = 0;
+
+            for (int i = 0; i < firstVector.Length; i++)
+            {
+                result += firstVector[i] * secondVector[i];
+            }
+
+            return result;
+        }
+
         private int[] MultiplyVectorByNumber(int[] firstVector, int number)
         {
 

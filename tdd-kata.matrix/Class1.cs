@@ -49,7 +49,33 @@ namespace tdd_kata.matrix
 
             Assert.AreEqual(expectedVector, result);
 
-        }       
+        }
+
+        [Test]
+        public void GivenVectorAndNumberThenMultiply()
+        {
+            int[] vector = { 1, 2, 3, 4 };
+            int number = 5;
+            int[] expectedVector = { 5, 10, 15, 20 };
+
+
+            var result = MultiplyVectorByNumber(vector, number);
+
+            Assert.AreEqual(expectedVector, result);
+        }
+
+        private int[] MultiplyVectorByNumber(int[] firstVector, int number)
+        {
+
+            int[] multiplied = new int[firstVector.Length];
+
+            for (int i = 0; i < firstVector.Length; i++)
+            {
+                multiplied[i] = firstVector[i] * number;
+            }
+
+            return multiplied;
+        }
 
         private int[] SubtractTwoVectors(int[] firstVector, int[] secondVector)
         {
@@ -83,7 +109,7 @@ namespace tdd_kata.matrix
                 sumeUp[i] = firstVector[i] + secondVector[i];
             }
             return sumeUp;
-        }
+        }        
 
         public class DiffrentDimensionException : Exception
         {

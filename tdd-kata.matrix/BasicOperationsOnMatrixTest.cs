@@ -11,7 +11,7 @@ namespace tdd_kata.matrix
     public class BasicOperationsOnMatrixTest
     {
         [Test]
-        public void Given2DimentionMatrixThenAdd()
+        public void Given2DimensionalMatrixThenAdd()
         {
             int[,] firstMatrix = { { 1, 2 }, { 1, 2 } };
             int[,] secondMatrix = { { 2, 1 }, { 2, 1 } };

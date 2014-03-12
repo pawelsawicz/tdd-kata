@@ -9,6 +9,9 @@ namespace tdd_kata.matrix
     [TestFixture]
     public class Class1
     {
+
+        private IVectorOperations _vectorOperations { get; set; }
+
         /* Theoretical intro
          * 
          * 
@@ -17,6 +20,14 @@ namespace tdd_kata.matrix
          * 
          * 
          */
+
+        [SetUp]
+        public void SetUp()
+        {
+            _vectorOperations = new VectorOperations();
+        }
+
+
         [Test]
         public void GivenTwoVectorsThenAdd()
         {
@@ -24,7 +35,7 @@ namespace tdd_kata.matrix
             int[] secondVector = { 1, 2, 3, 4 };
             int[] expectedVector = {2,4,6,8};
 
-            var result = AddTwoVectors(firstVector, secondVector);
+            var result = _vectorOperations.AddTwoVectors(firstVector, secondVector);
 
             Assert.AreEqual(expectedVector, result);
         }
@@ -33,9 +44,9 @@ namespace tdd_kata.matrix
         public void IfVectorDimentionAreNotEqual()
         {
             int[] firstVector = { 1, 2, 3 };
-            int[] secondVector = { 1, 2 };            
+            int[] secondVector = { 1, 2 };
 
-            Assert.Throws<DiffrentDimensionException>(() => AddTwoVectors(firstVector, secondVector));
+            Assert.Throws<DiffrentDimensionException>(() => _vectorOperations.AddTwoVectors(firstVector, secondVector));
         }
 
         [Test]
@@ -45,7 +56,7 @@ namespace tdd_kata.matrix
             int[] secondVector = { 2, 3, 4, 5 };
             int[] expectedVector = { -1, -1, -1, -1 };
 
-            var result = SubtractTwoVectors(firstVector, secondVector);
+            var result = _vectorOperations.SubtractTwoVectors(firstVector, secondVector);
 
             Assert.AreEqual(expectedVector, result);
 
@@ -59,7 +70,7 @@ namespace tdd_kata.matrix
             int[] expectedVector = { 5, 10, 15, 20 };
 
 
-            var result = MultiplyVectorByNumber(vector, number);
+            var result = _vectorOperations.MultiplyVectorByNumber(vector, number);
 
             Assert.AreEqual(expectedVector, result);
         }
@@ -71,7 +82,7 @@ namespace tdd_kata.matrix
             int[] secondVector = { 7, 3, 7, 5 };
             int expectedValue = 54;
 
-            var result = ScalarMultiply(firstVector, secondVector);
+            var result = _vectorOperations.ScalarMultiply(firstVector, secondVector);
 
             Assert.AreEqual(expectedValue, result);
         }
@@ -82,80 +93,91 @@ namespace tdd_kata.matrix
             int[] vector = { 2, 2, 1 };
             double expectedLenghtOfVector = 3;
 
-            var result = LenghtOfVector(vector);
+            var result = _vectorOperations.LenghtOfVector(vector);
 
             Assert.AreEqual(expectedLenghtOfVector, result);
-        }
-
-        private double LenghtOfVector(int[] vector)
-        {
-            double sumUp = 0;
-            for (int i = 0; i < vector.Length; i++)
-            {
-                sumUp += vector[i] * vector[i];
-            }
-
-            return Math.Sqrt(sumUp);
-        }
-
-        private int ScalarMultiply(int[] firstVector, int[] secondVector)
-        {
-            int result = 0;
-
-            for (int i = 0; i < firstVector.Length; i++)
-            {
-                result += firstVector[i] * secondVector[i];
-            }
-
-            return result;
-        }
-
-        private int[] MultiplyVectorByNumber(int[] firstVector, int number)
-        {
-
-            int[] multiplied = new int[firstVector.Length];
-
-            for (int i = 0; i < firstVector.Length; i++)
-            {
-                multiplied[i] = firstVector[i] * number;
-            }
-
-            return multiplied;
-        }
-
-        private int[] SubtractTwoVectors(int[] firstVector, int[] secondVector)
-        {
-            if (firstVector.Length != secondVector.Length)
-            {
-                throw new DiffrentDimensionException();
-            }
-
-            int[] subtracted = new int[firstVector.Length];
-
-            for (int i = 0; i < firstVector.Length; i++)
-            {
-                subtracted[i] = firstVector[i] - secondVector[i];
-            }
-
-            return subtracted;
-        }
-
-
-        private int[] AddTwoVectors(int[] firstVector, int[] secondVector)
-        {
-            if (firstVector.Length != secondVector.Length)
-            {
-                throw new DiffrentDimensionException();
-            }
-
-            int[] sumeUp = new int[firstVector.Length];
-
-            for (int i = 0; i < firstVector.Length; i++)
-            {
-                sumeUp[i] = firstVector[i] + secondVector[i];
-            }
-            return sumeUp;
         }        
+
+        public interface IVectorOperations
+        {
+            double LenghtOfVector(int[] vector);
+            int ScalarMultiply(int[] firstVector, int[] secondVector);
+            int[] MultiplyVectorByNumber(int[] firstVector, int number);
+            int[] SubtractTwoVectors(int[] firstVector, int[] secondVector);
+            int[] AddTwoVectors(int[] firstVector, int[] secondVector);
+        }
+
+        public class VectorOperations : IVectorOperations
+        {
+
+            public double LenghtOfVector(int[] vector)
+            {
+                double sumUp = 0;
+                for (int i = 0; i < vector.Length; i++)
+                {
+                    sumUp += vector[i] * vector[i];
+                }
+
+                return Math.Sqrt(sumUp);
+            }
+
+            public int ScalarMultiply(int[] firstVector, int[] secondVector)
+            {
+                int result = 0;
+
+                for (int i = 0; i < firstVector.Length; i++)
+                {
+                    result += firstVector[i] * secondVector[i];
+                }
+
+                return result;
+            }
+
+            public int[] MultiplyVectorByNumber(int[] firstVector, int number)
+            {
+                int[] multiplied = new int[firstVector.Length];
+
+                for (int i = 0; i < firstVector.Length; i++)
+                {
+                    multiplied[i] = firstVector[i] * number;
+                }
+
+                return multiplied;
+            }
+
+            public int[] SubtractTwoVectors(int[] firstVector, int[] secondVector)
+            {
+                if (firstVector.Length != secondVector.Length)
+                {
+                    throw new DiffrentDimensionException();
+                }
+
+                int[] subtracted = new int[firstVector.Length];
+
+                for (int i = 0; i < firstVector.Length; i++)
+                {
+                    subtracted[i] = firstVector[i] - secondVector[i];
+                }
+
+                return subtracted;
+            }
+
+            public int[] AddTwoVectors(int[] firstVector, int[] secondVector)
+            {
+                if (firstVector.Length != secondVector.Length)
+                {
+                    throw new DiffrentDimensionException();
+                }
+
+                int[] sumeUp = new int[firstVector.Length];
+
+                for (int i = 0; i < firstVector.Length; i++)
+                {
+                    sumeUp[i] = firstVector[i] + secondVector[i];
+                }
+                return sumeUp;
+            }
+        }
 
         public class DiffrentDimensionException : Exception
         {

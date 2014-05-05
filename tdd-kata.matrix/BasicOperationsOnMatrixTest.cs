@@ -11,7 +11,7 @@ namespace tdd_kata.matrix
     public class BasicOperationsOnMatrixTest
     {
         [Test]
-        public void Given2DimensionalMatrixThenAdd()
+        public void Given2DimensionalMatrixThenAddAndReturnCorrectValue()
         {
             int[,] firstMatrix = { { 1, 2 }, { 1, 2 } };
             int[,] secondMatrix = { { 2, 1 }, { 2, 1 } };
@@ -23,13 +23,25 @@ namespace tdd_kata.matrix
         }
 
         [Test]
-        public void Given2DimensionalMatrixButSizeIsDifferentThenAdd()
+        public void Given2DimensionalMatrixButSizeIsDifferentThenAddResturnException()
         {
             int[,] firstMatrix = { { 1, 2, 3 }, { 1, 2, 3 } };
             int[,] secondMatrix = { { 1, 2 }, { 5, 6 } };
 
             var exceptionResult = Assert.Throws<DiffrentSizeOfMarix>(() => firstMatrix.Add(secondMatrix));
 
+        }
+
+        [Test]
+        public void Given2DimensionalMatrixThenSubstractAndReturnCorrectValue()
+        {
+            int[,] firstMatrix = { { 1, 1, 1 }, { 1, 1, 1 } };
+            int[,] secondMatrix = { { 1, 1, 1 }, { 1, 1, 1 } };
+            int[,] expectedResult = { { 0, 0, 0 }, { 0, 0, 0 } };
+
+            var result = firstMatrix.Delete(secondMatrix);
+
+            Assert.AreEqual(expectedResult, result);
         }
 
     }
@@ -56,6 +68,28 @@ namespace tdd_kata.matrix
                     for (int j = 0; j < firstMatrix.GetLength(1); j++)
                     {
                         result[i, j] = firstMatrix[i, j] + secondMatrix[i, j];
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        public static int[,] Delete(this int[,] firstMatrix, int[,] secondMatrix)
+        {
+            var result = new int[firstMatrix.GetLength(0), firstMatrix.GetLength(1)];
+
+            if (firstMatrix.GetLength(0) != secondMatrix.GetLength(0) || firstMatrix.GetLength(1) != secondMatrix.GetLength(1))
+            {
+                throw new DiffrentSizeOfMarix();
+            }
+            else
+            {
+                for (int x = 0; x < firstMatrix.GetLength(0); x++)
+                {
+                    for (int y = 0; y < firstMatrix.GetLength(1); y++)
+                    {
+                        result[x, y] = firstMatrix[x, y] - secondMatrix[x, y];
                     }
                 }
 

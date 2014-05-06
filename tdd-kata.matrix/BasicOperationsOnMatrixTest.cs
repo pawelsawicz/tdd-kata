@@ -65,6 +65,17 @@ namespace tdd_kata.matrix
             Assert.Throws<WrongSizeOfMatrixToMultiply>(() => firstMatrix.Multiply(secondMatrix));
         }
 
+        [Test]
+        public void Given2DimensionalMatrixThenTransposeAndReturnTransposedMatrix()
+        {
+            int[,] matrixToTranspose = { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
+            int[,] expectedMatrix = { { 1, 1, 1 }, { 2, 2, 2 }, { 3, 3, 3 }, { 4, 4, 4 } };
+
+            var result = matrixToTranspose.Transpose();
+
+            Assert.AreEqual(expectedMatrix, result);
+        }
+
     }
 
     public class DiffrentSizeOfMarix : Exception
@@ -146,6 +157,22 @@ namespace tdd_kata.matrix
 
                 return result;
             }
+        }
+
+        public static int[,] Transpose(this int[,] matrixToTranspose)
+        {
+            var result = new int[matrixToTranspose.GetLength(1), matrixToTranspose.GetLength(0)];
+
+            for (int i = 0; i < matrixToTranspose.GetLength(1); i++)
+            {
+                for (int j = 0; j < matrixToTranspose.GetLength(0); j++)
+                {
+                    result[i, j] = matrixToTranspose[j, i];
+                }
+            }
+
+
+            return result;
         }
     }
 }

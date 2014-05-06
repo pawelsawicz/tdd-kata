@@ -44,11 +44,37 @@ namespace tdd_kata.matrix
             Assert.AreEqual(expectedResult, result);
         }
 
+        [Test]
+        public void Given2DimensionalMatrixThenMultiplyByMatrixAndReturnCorrectValue()
+        {
+            int[,] firstMatrix = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] secondMatrix = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] expectedValue = { { 30, 36, 42 }, { 66, 81, 96 }, { 102, 126, 150 } };
+
+            var result = firstMatrix.Multiply(secondMatrix);
+
+            Assert.AreEqual(expectedValue, result);
+        }
+
+        [Test]
+        public void Given2DimensionalMatrixThenMultiplyByMatrixAndReturnException()
+        {
+            int[,] firstMatrix = { {1,2 }, {3,4 } };
+            int[,] secondMatrix = { { 1, 2, 3 }, { 3, 4, 5 }, { 6, 7, 8 } };
+
+            Assert.Throws<WrongSizeOfMatrixToMultiply>(() => firstMatrix.Multiply(secondMatrix));
+        }
+
     }
 
     public class DiffrentSizeOfMarix : Exception
     {
          
+    }
+
+    public class WrongSizeOfMatrixToMultiply : Exception
+    {
+
     }
 
     public static class MatrixHelpers
@@ -90,6 +116,31 @@ namespace tdd_kata.matrix
                     for (int y = 0; y < firstMatrix.GetLength(1); y++)
                     {
                         result[x, y] = firstMatrix[x, y] - secondMatrix[x, y];
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        public static int[,] Multiply(this int[,] firstMatrix, int[,] secondMatrix)
+        {
+            if (firstMatrix.GetLength(0) != secondMatrix.GetLength(1))
+            {
+                throw new WrongSizeOfMatrixToMultiply();
+            }
+            else
+            {
+                var result = new int[firstMatrix.GetLength(0), secondMatrix.GetLength(1)];
+
+                for (int i = 0; i < firstMatrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < secondMatrix.GetLength(0); j++)
+                    {
+                        for (int k = 0; k < secondMatrix.GetLength(1); k++)
+                        {
+                            result[i, j] += firstMatrix[i, k] * secondMatrix[k, j];
+                        }
                     }
                 }
 

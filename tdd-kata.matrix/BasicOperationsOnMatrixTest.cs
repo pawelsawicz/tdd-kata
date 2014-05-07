@@ -76,6 +76,17 @@ namespace tdd_kata.matrix
             Assert.AreEqual(expectedMatrix, result);
         }
 
+        [Test]
+        public void Given2DimensionalMatrixThenCalculateDeterminantAndReturnValue()
+        {
+            int[,] matrixToCalculate = { { 1, 2 }, { 3, 4 } };
+            int expectedDeterminant = -2;
+
+            var result = matrixToCalculate.Determinant();
+
+            Assert.AreEqual(expectedDeterminant, result);
+        }
+
     }
 
     public class DiffrentSizeOfMarix : Exception
@@ -171,6 +182,29 @@ namespace tdd_kata.matrix
                 }
             }
 
+
+            return result;
+        }
+
+        public static int Determinant(this int[,] matrixToCalculate)
+        {
+            var result = 0;
+
+            if (matrixToCalculate.GetLength(0) == matrixToCalculate.GetLength(1))
+            {  
+                if (matrixToCalculate.GetLength(0) == 2)
+                {
+                    result = (matrixToCalculate[0, 0] * matrixToCalculate[1, 1]) - (matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
+                }
+                else if (matrixToCalculate.GetLength(0) > 2)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            else
+            {
+                throw new DiffrentSizeOfMarix();
+            }
 
             return result;
         }

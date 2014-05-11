@@ -77,7 +77,7 @@ namespace tdd_kata.matrix
         }
 
         [Test]
-        public void Given2DimensionalMatrixThenCalculateDeterminantAndReturnValue()
+        public void Given2DimensionalMatrixOfSize2for2ThenCalculateDeterminantAndReturnValue()
         {
             int[,] matrixToCalculate = { { 1, 2 }, { 3, 4 } };
             int expectedDeterminant = -2;
@@ -87,6 +87,41 @@ namespace tdd_kata.matrix
             Assert.AreEqual(expectedDeterminant, result);
         }
 
+        [Test]
+        public void Given2DimentionalMatrixOfSize1for1ThenCalculateDeterminantAndReturnValue()
+        {
+            int[,] matrixToCalculate = { { 1 } };
+            int expectedDeterminant = 1;
+
+            var result = matrixToCalculate.Determinant();
+
+            Assert.AreEqual(expectedDeterminant, result);
+        }      
+
+        [Test]
+        public void Given2DimentionalMatrixOfSize3of3ThenGetMinorAndReturnValue()
+        {
+            int[,] matrixToConvert = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] expectedMatrix = { { 1, 3 }, { 7, 9 } };
+
+            var result = matrixToConvert.GetMinor(1, 1);
+
+            Assert.AreEqual(expectedMatrix, result);
+            Assert.AreEqual(expectedMatrix.GetLength(0), matrixToConvert.GetLength(0) - 1);
+            Assert.AreEqual(expectedMatrix.GetLength(1), matrixToConvert.GetLength(1) - 1);
+
+        }
+
+        [Test]
+        public void Given2DimentionalMatrixThenMultiplyAndReturnValue()
+        {
+            int[,] matrixToConvert = { { 1, 2 }, { 3, 4 } };
+            double[,] expectedMatrix = { { 0.5, 1 }, { 1.5, 2 } };
+
+            var result = matrixToConvert.Multiply(0.5);
+
+            Assert.AreEqual(expectedMatrix, result);
+        }
     }
 
     public class DiffrentSizeOfMarix : Exception
@@ -186,13 +221,17 @@ namespace tdd_kata.matrix
             return result;
         }
 
-        public static int Determinant(this int[,] matrixToCalculate)
+        public static int Determinant(this int[,] matrixToCalculate )
         {
             var result = 0;
-
+            
             if (matrixToCalculate.GetLength(0) == matrixToCalculate.GetLength(1))
             {  
-                if (matrixToCalculate.GetLength(0) == 2)
+                if (matrixToCalculate.GetLength(0) == 1)
+                {
+                    result = matrixToCalculate[0, 0];
+                }
+                else if (matrixToCalculate.GetLength(0) == 2)
                 {
                     result = (matrixToCalculate[0, 0] * matrixToCalculate[1, 1]) - (matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
                 }
@@ -204,6 +243,46 @@ namespace tdd_kata.matrix
             else
             {
                 throw new DiffrentSizeOfMarix();
+            }
+
+            return result;
+        }
+                
+        public static int[,] GetMinor(this int[,] matrixToConvert, int xPosition, int yPosition)
+        {
+            int[,] result = new int[matrixToConvert.GetLength(0) - 1, matrixToConvert.GetLength(1) - 1];
+            int xNewValue = 0;
+            int yNewValue = 0;
+            for (int i = 0; i < matrixToConvert.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrixToConvert.GetLength(1); j++)
+                {
+                    if (i != xPosition && j != yPosition)
+                    {                                           
+                        result[xNewValue, yNewValue] = matrixToConvert[i, j];
+                        yNewValue++;
+                        if (yNewValue > result.GetLength(1) - 1)
+                        {
+                            xNewValue++;
+                            yNewValue = 0;
+                        }                        
+                    }                    
+                }
+            }
+
+            return result;
+        }
+
+        public static double[,] Multiply(this int[,] matrixToMultiply, double multiplyBy)
+        {
+            double[,] result = new double[matrixToMultiply.GetLength(0), matrixToMultiply.GetLength(1)];
+
+            for (int i = 0; i < matrixToMultiply.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrixToMultiply.GetLength(1); j++)
+                {
+                    result[i, j] = (double)matrixToMultiply[i, j] * multiplyBy;
+                }
             }
 
             return result;

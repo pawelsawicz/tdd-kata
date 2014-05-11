@@ -77,6 +77,17 @@ namespace tdd_kata.matrix
         }
 
         [Test]
+        public void Given2DimentionalMatrixOfSize3of3ThenCalcualteDeterminantAndReturnValue()
+        {
+            int[,] matrixToCalculate = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int expectedValue = 0;
+
+            var result = matrixToCalculate.Determinant();
+
+            Assert.AreEqual(expectedValue, result);
+        }
+
+        [Test]
         public void Given2DimensionalMatrixOfSize2for2ThenCalculateDeterminantAndReturnValue()
         {
             int[,] matrixToCalculate = { { 1, 2 }, { 3, 4 } };
@@ -96,7 +107,31 @@ namespace tdd_kata.matrix
             var result = matrixToCalculate.Determinant();
 
             Assert.AreEqual(expectedDeterminant, result);
-        }      
+        }
+
+        [Test]
+        public void Given2DimentionalMatrixOfSize3for3ThenInvertAndReturnInvertedValue()
+        {
+            //arrange
+            int[,] matrixToInvert = { { 1, 2, -2 }, { 1, 1, 1 }, { 1, 4, 1 } };
+            int[,] expectedMatrix = { { 3, 10, -4 }, { 0, -3, 3 }, { -3, 2, 1 } };
+            double expectedDeterminant = 1 / 9;
+            var expectedInvertedMatrix = expectedMatrix.Multiply(expectedDeterminant);
+
+            //act
+            var result = matrixToInvert.Invert();
+
+            //assert
+            Assert.AreEqual(expectedInvertedMatrix, result);
+        }
+
+        [Test]
+        public void Given2DimentionalMatrixThenTryInvertAndReturnException()
+        {
+            int[,] matrixToInvert = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+
+            Assert.Throws<InvertedMatrixDoesntExist>(() => matrixToInvert.Invert());
+        }
 
         [Test]
         public void Given2DimentionalMatrixOfSize3of3ThenGetMinorAndReturnValue()
@@ -130,6 +165,15 @@ namespace tdd_kata.matrix
     }
 
     public class WrongSizeOfMatrixToMultiply : Exception
+    {
+
+    }
+
+    public class InvertedMatrixDoesntExist : Exception
+    {
+    }
+
+    public class NotSquareMatrix : Exception
     {
 
     }
@@ -233,11 +277,19 @@ namespace tdd_kata.matrix
                 }
                 else if (matrixToCalculate.GetLength(0) == 2)
                 {
+                    //to refactor
                     result = (matrixToCalculate[0, 0] * matrixToCalculate[1, 1]) - (matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
                 }
                 else if (matrixToCalculate.GetLength(0) > 2)
                 {
-                    throw new NotImplementedException();
+                    //to refactor 
+                    var firstValue = (matrixToCalculate[0,0] * matrixToCalculate[1,1] * matrixToCalculate[2,2]) + (matrixToCalculate[1,0] * matrixToCalculate[2,1] * matrixToCalculate[0,2])
+                        + (matrixToCalculate[2,0] * matrixToCalculate[0,1] * matrixToCalculate[1,2]);
+
+                    var secondValue = (matrixToCalculate[0, 2] * matrixToCalculate[1, 1] * matrixToCalculate[2, 0]) + (matrixToCalculate[1, 2] * matrixToCalculate[2, 1] * matrixToCalculate[0, 0]) 
+                        + (matrixToCalculate[2, 2] * matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
+
+                    result = firstValue - secondValue;
                 }
             }
             else
@@ -247,7 +299,36 @@ namespace tdd_kata.matrix
 
             return result;
         }
-                
+
+        public static double[,] Invert(this int[,] matrixToConvert)
+        {
+            double[,] result = new double[matrixToConvert.GetLength(0), matrixToConvert.GetLength(1)];
+            int determinant = matrixToConvert.Determinant();
+            if (matrixToConvert.GetLength(0) == matrixToConvert.GetLength(1))
+            {
+                if (determinant != 0)
+                {
+                    for (int i = 0; i < matrixToConvert.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < matrixToConvert.GetLength(1); j++)
+                        {
+                            result[i, j] = matrixToConvert.GetMinor(i, j).Determinant() * (1 / determinant);
+                        }
+                    }
+
+                    return result;
+                }
+                else
+                {
+                    throw new InvertedMatrixDoesntExist();
+                }
+            }
+            else
+            {
+                throw new NotSquareMatrix();
+            }
+        }
+
         public static int[,] GetMinor(this int[,] matrixToConvert, int xPosition, int yPosition)
         {
             int[,] result = new int[matrixToConvert.GetLength(0) - 1, matrixToConvert.GetLength(1) - 1];

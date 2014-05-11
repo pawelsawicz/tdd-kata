@@ -157,6 +157,28 @@ namespace tdd_kata.matrix
 
             Assert.AreEqual(expectedMatrix, result);
         }
+
+        [Test]
+        public void Given2DimentionalMatrixThenCheckIfIsSquareMatrixAndReturnTrue()
+        {
+            int[,] squareMatrix = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            bool expectedResult = true;
+
+            var result = squareMatrix.IsSquare();
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [Test]
+        public void Given2DimentionalMatrixThenCheckIfSquareAndReturnFalse()
+        {
+            int[,] notSuareMatrix = { { }, { } };
+            bool expectedResult = false;
+
+            var result = notSuareMatrix.IsSquare();
+
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 
     public class DiffrentSizeOfMarix : Exception
@@ -269,7 +291,7 @@ namespace tdd_kata.matrix
         {
             var result = 0;
             
-            if (matrixToCalculate.GetLength(0) == matrixToCalculate.GetLength(1))
+            if (matrixToCalculate.IsSquare())
             {  
                 if (matrixToCalculate.GetLength(0) == 1)
                 {
@@ -280,7 +302,7 @@ namespace tdd_kata.matrix
                     //to refactor
                     result = (matrixToCalculate[0, 0] * matrixToCalculate[1, 1]) - (matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
                 }
-                else if (matrixToCalculate.GetLength(0) > 2)
+                else if (matrixToCalculate.GetLength(0) == 3)
                 {
                     //to refactor 
                     var firstValue = (matrixToCalculate[0,0] * matrixToCalculate[1,1] * matrixToCalculate[2,2]) + (matrixToCalculate[1,0] * matrixToCalculate[2,1] * matrixToCalculate[0,2])
@@ -294,7 +316,7 @@ namespace tdd_kata.matrix
             }
             else
             {
-                throw new DiffrentSizeOfMarix();
+                throw new NotSquareMatrix();
             }
 
             return result;
@@ -304,7 +326,7 @@ namespace tdd_kata.matrix
         {
             double[,] result = new double[matrixToConvert.GetLength(0), matrixToConvert.GetLength(1)];
             int determinant = matrixToConvert.Determinant();
-            if (matrixToConvert.GetLength(0) == matrixToConvert.GetLength(1))
+            if (matrixToConvert.IsSquare())
             {
                 if (determinant != 0)
                 {
@@ -367,6 +389,18 @@ namespace tdd_kata.matrix
             }
 
             return result;
+        }
+
+        public static bool IsSquare(this int[,] matrixToCheck)
+        {
+            if (matrixToCheck.GetLength(0) != matrixToCheck.GetLength(1))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

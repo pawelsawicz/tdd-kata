@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="BasicOperationsOnMatrixTest.cs" />
     <Compile Include="BasicOperationsOnVectorsTest.cs" />
+    <Compile Include="BasicSolvingLinearEquationsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

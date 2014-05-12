@@ -10,7 +10,7 @@ namespace tdd_kata.matrix
     public class BasicSolvingLinearEquationsTest
     {
         [Test]
-        public void GivenTwoLinearEquationsThenSolveItByCramerAndReturnValue()
+        public void GivenThreeLinearEquationsThenSolveItByCramerAndReturnSolution()
         {
             //arrange
             int[,] equationToSolve = { { 4, 4, 4 }, { 4, 8, 8 }, { 4, 8, 12 } };
@@ -22,7 +22,7 @@ namespace tdd_kata.matrix
 
             //assert
             Assert.AreEqual(expectedVariables, result);
-        }
+        }        
 
         private int[] CramerSolve(int[,] equationToSolve, int[] values)
         {

@@ -28,6 +28,42 @@ namespace tdd_kata.matrix
 
         }
 
+        [Test]
+        public void GivenSinFunctionThenCalculateNumericIntegralByRectangleAndReturnValue()
+        {
+            //arrange
+            double lowerRange = 0;
+            double upperRange = Math.PI;
+            int countOfPoints = 4;
+            var dx = (upperRange - lowerRange) / countOfPoints;
+            double[] points = new double[countOfPoints];
+            double[] valuesOfFunction = new double[countOfPoints];
+            double calculatedArea = 0;
+            double expectedArea = 1.8961;
+
+            for (int i = 0; i < points.GetLength(0); i++)
+            {
+                var indexOfPoint = (double)i + 1;
+                points[i] = lowerRange + (( indexOfPoint/ (double)countOfPoints) * (upperRange - lowerRange)); 
+            }
+
+            for (int i = 0; i < points.GetLength(0); i++)
+            {
+                valuesOfFunction[i] = Math.Sin(points[i]);
+            }
+
+            double tempValue = 0;
+            for (int i = 0; i < valuesOfFunction.GetLength(0); i++)
+            {
+                tempValue += valuesOfFunction[i];
+            }
+
+            calculatedArea = dx * tempValue;
+
+            calculatedArea.Should().BeApproximately(expectedArea, 0.1);
+
+        }
+
         private double TrapezoidalMethod(double lowerRange, double upperRange, int countOfPoints)
         {
             double result = 0;

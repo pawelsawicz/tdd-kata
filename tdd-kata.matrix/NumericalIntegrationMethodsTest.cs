@@ -12,18 +12,27 @@ namespace tdd_kata.matrix
     public class NumericalIntegrationMethodsTest
     {
         [Test]
-        public void GivenSinFunctionThenCalculateNumericIntegralAndReturnArea()
+        public void GivenSinFunctionThenCalculateNumericIntegralByTrapezoidalAndReturnArea()
         {
-            //arrange
-            var lowerRange = 0;
-            var upperRange = Math.PI;
-            int countOfPoints = 4;
-            double[] points = new double[countOfPoints + 1];
-            double[] valuesOfFunction = new double[countOfPoints + 1];
-            double sumOfAreas = 0;
+            //arrange   
             double expectedArea = 1.8961;
+            double lowerRange = 0;
+            double upperRange = Math.PI;
+            int countOfPoints = 4;
 
             //act
+            var result = TrapezoidalMethod(lowerRange, upperRange, countOfPoints);
+
+            //assert
+            result.Should().BeApproximately(expectedArea, 0.1);
+
+        }
+
+        private double TrapezoidalMethod(double lowerRange, double upperRange, int countOfPoints)
+        {
+            double result = 0;
+            double[] points = new double[countOfPoints + 1];
+            double[] valuesOfFunction = new double[countOfPoints + 1];
             var dx = (upperRange - lowerRange) / countOfPoints;
             for (int i = 0; i < points.GetLength(0); i++)
             {
@@ -47,11 +56,9 @@ namespace tdd_kata.matrix
                     tempValue += (valuesOfFunction[0] + valuesOfFunction[i]) / 2;
                 }
             }
-            sumOfAreas = dx * tempValue;
+            result = dx * tempValue;
 
-            //assert
-            sumOfAreas.Should().BeApproximately(expectedArea, 0.1);
-
+            return result;
         }
     }
 }

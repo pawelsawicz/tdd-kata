@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicInterpolationTest.cs" />
     <Compile Include="BasicOperationsOnMatrixTest.cs" />
     <Compile Include="BasicOperationsOnVectorsTest.cs" />
     <Compile Include="BasicSolvingLinearEquationsTest.cs" />

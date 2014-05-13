@@ -14,42 +14,53 @@ namespace tdd_kata.matrix
         [Test]
         public void GivenSetOfTemperaturesThenInterpolateApproximateValue()
         {
-            double[] interpolateNodes = { 12, 13, 14, 15, 16 };
-            double[] valuesFunctionOfNodes = { 24, 25, 23, 20, 16 };
+
+            //arrange
+            double[] interpolationNodes = { 12, 13, 14, 15, 16 };
+            double[] valuesOfFunctionForNodes = { 24, 25, 23, 20, 16 };
             double lookingArgument = 14.5;
             double expectedValue = 21.6;
 
+            //act
+            var result = LagrangeInterpolationMethod(interpolationNodes, valuesOfFunctionForNodes, lookingArgument);
+
+            //assert
+            result.Should().BeApproximately(expectedValue, 0.1);
+        }
+
+        private double LagrangeInterpolationMethod(double[] interpolationNodes, double[] valuesOfFunctionForNodes, double lookingArgument)
+        {           
             double result = 0;
 
-            double firstValue = 1;
-            for (int i = 0; i < interpolateNodes.GetLength(0); i++)
+            double firstSectionOfEquation = 1;
+            for (int i = 0; i < interpolationNodes.GetLength(0); i++)
             {
-                firstValue *= (lookingArgument - interpolateNodes[i]);
+                firstSectionOfEquation *= (lookingArgument - interpolationNodes[i]);
             }
 
-            double secondValue = 0;
+            double secondSectionOfEquation = 0;
 
-            for (int i = 0; i < valuesFunctionOfNodes.GetLength(0); i++)
+            for (int i = 0; i < valuesOfFunctionForNodes.GetLength(0); i++)
             {
-                double thirdValue = 1;
-                for (int j = 0; j < interpolateNodes.GetLength(0); j++)
+                double denominator = 1;
+                for (int j = 0; j < interpolationNodes.GetLength(0); j++)
                 {
                     if (i != j)
                     {
-                        thirdValue *= interpolateNodes[i] - interpolateNodes[j];
+                        denominator *= interpolationNodes[i] - interpolationNodes[j];
                     }
                     else
                     {
-                        thirdValue *= lookingArgument - interpolateNodes[i];
+                        denominator *= lookingArgument - interpolationNodes[i];
                     }
                 }
 
-                secondValue += (valuesFunctionOfNodes[i]) / (thirdValue);
+                secondSectionOfEquation += (valuesOfFunctionForNodes[i]) / (denominator);
             }
 
-            result = firstValue * secondValue;
+            result = firstSectionOfEquation * secondSectionOfEquation;
 
-            result.Should().BeApproximately(expectedValue, 0.1);
+            return result;
         }
     }
 }

@@ -12,9 +12,8 @@ namespace tdd_kata.matrix
     public class BasicInterpolationTest
     {
         [Test]
-        public void GivenSetOfTemperaturesThenInterpolateApproximateValue()
+        public void GivenSetOfTemperaturesThenInterpolateByLagrangeValue()
         {
-
             //arrange
             double[] interpolationNodes = { 12, 13, 14, 15, 16 };
             double[] valuesOfFunctionForNodes = { 24, 25, 23, 20, 16 };

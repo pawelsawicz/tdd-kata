@@ -179,6 +179,26 @@ namespace tdd_kata.matrix
 
             Assert.AreEqual(expectedResult, result);
         }
+
+        [Test]
+        public void Given2DimentionalMatrixThenDecomposeMatrixToTwoTriangleMatrix()
+        {
+            int[,] matrixToDecompose = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            double[,] expectedDecomposedUpperTriangleMatrix = { { 1, 2, 3 }, { 0, -3, -6 }, { 0, 0, 0 } };
+            double[,] expectedDecomposedLowerTriangleMatrix = { { 1, 0, 0 }, { 4, 1, 0 }, { 7, 2, 1 } };
+
+            var result = matrixToDecompose.Decompose();
+
+            Assert.AreEqual(expectedDecomposedUpperTriangleMatrix, result.UpperTriangleMatrix);
+            Assert.AreEqual(expectedDecomposedLowerTriangleMatrix, result.LowerTriangleMatrix);
+
+        }
+    }
+
+    public class Matrix
+    {
+        public double[,] UpperTriangleMatrix { get; set; }
+        public double[,] LowerTriangleMatrix { get; set; }        
     }
 
     public class DiffrentSizeOfMarix : Exception
@@ -401,6 +421,50 @@ namespace tdd_kata.matrix
             {
                 return true;
             }
+        }
+
+        public static Matrix Decompose(this int[,] matrixToDecompose)
+        {
+            var result = new Matrix();
+            double[,] upperTriangleMatrix = new double[matrixToDecompose.GetLength(0), matrixToDecompose.GetLength(1)];
+            double[,] lowerTriangleMatrix = new double[matrixToDecompose.GetLength(0), matrixToDecompose.GetLength(1)];
+            int numberOfUnknown = matrixToDecompose.GetLength(0) * matrixToDecompose.GetLength(0);
+
+            for (int i = 0; i < lowerTriangleMatrix.GetLength(1); i++)
+            {
+                lowerTriangleMatrix[i, i] = 1;
+            }
+
+            for (int i = 0; i < matrixToDecompose.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrixToDecompose.GetLength(1); j++)
+                {
+                    if (i <= j)
+                    {
+                        double tempSumToDelete = 0;
+                        for (int k = 0; k <= i; k++)
+                        {
+                            tempSumToDelete += lowerTriangleMatrix[i, k] * upperTriangleMatrix[k, j];
+                        }
+
+                        upperTriangleMatrix[i, j] = matrixToDecompose[i, j] - tempSumToDelete;
+                    }
+                    else
+                    {
+                        double tempSumToDelete = 0;
+                        for (int k = 0; k <= j; k++)
+                        {
+                            tempSumToDelete += lowerTriangleMatrix[i, k] * upperTriangleMatrix[k, j];
+                        }
+
+                        lowerTriangleMatrix[i, j] = (1 / upperTriangleMatrix[j, j]) * (matrixToDecompose[i, j] - tempSumToDelete);
+                    }
+                }
+            }
+
+            result.UpperTriangleMatrix = upperTriangleMatrix;
+            result.LowerTriangleMatrix = lowerTriangleMatrix;
+            return result;
         }
     }
 }

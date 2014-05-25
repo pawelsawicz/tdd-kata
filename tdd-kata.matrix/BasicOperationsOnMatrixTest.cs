@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using FluentAssertions;
 
 namespace tdd_kata.matrix
 {
@@ -68,8 +69,8 @@ namespace tdd_kata.matrix
         [Test]
         public void Given2DimensionalMatrixThenTransposeAndReturnTransposedMatrix()
         {
-            int[,] matrixToTranspose = { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
-            int[,] expectedMatrix = { { 1, 1, 1 }, { 2, 2, 2 }, { 3, 3, 3 }, { 4, 4, 4 } };
+            double[,] matrixToTranspose = { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
+            double[,] expectedMatrix = { { 1, 1, 1 }, { 2, 2, 2 }, { 3, 3, 3 }, { 4, 4, 4 } };
 
             var result = matrixToTranspose.Transpose();
 
@@ -80,7 +81,7 @@ namespace tdd_kata.matrix
         public void Given2DimentionalMatrixOfSize3of3ThenCalcualteDeterminantAndReturnValue()
         {
             int[,] matrixToCalculate = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-            int expectedValue = 0;
+            double expectedValue = 0;
 
             var result = matrixToCalculate.Determinant();
 
@@ -91,7 +92,7 @@ namespace tdd_kata.matrix
         public void Given2DimensionalMatrixOfSize2for2ThenCalculateDeterminantAndReturnValue()
         {
             int[,] matrixToCalculate = { { 1, 2 }, { 3, 4 } };
-            int expectedDeterminant = -2;
+            double expectedDeterminant = -2;
 
             var result = matrixToCalculate.Determinant();
 
@@ -102,7 +103,7 @@ namespace tdd_kata.matrix
         public void Given2DimentionalMatrixOfSize1for1ThenCalculateDeterminantAndReturnValue()
         {
             int[,] matrixToCalculate = { { 1 } };
-            int expectedDeterminant = 1;
+            double expectedDeterminant = 1;
 
             var result = matrixToCalculate.Determinant();
 
@@ -115,7 +116,7 @@ namespace tdd_kata.matrix
             //arrange
             int[,] matrixToInvert = { { 1, 2, -2 }, { 1, 1, 1 }, { 1, 4, 1 } };
             int[,] expectedMatrix = { { 3, 10, -4 }, { 0, -3, 3 }, { -3, 2, 1 } };
-            double expectedDeterminant = 1 / 9;
+            double expectedDeterminant = ((double)1 / 9);
             var expectedInvertedMatrix = expectedMatrix.Multiply(expectedDeterminant);
 
             //act
@@ -193,12 +194,24 @@ namespace tdd_kata.matrix
             Assert.AreEqual(expectedDecomposedLowerTriangleMatrix, result.LowerTriangleMatrix);
 
         }
+
+        [Test]
+        public void Given2DimentionalMatrix4of4ThenCalculateDeterminantAndReturnValue()
+        {
+            int[,] matrixToCalculate = { { 1, 9, 3, 7 }, { 5, 5, 7, 7 }, { 10, 11, 10, 10 }, { 13, 14, 15, -6 } };
+            double expectedValue = -3544;
+
+            var result = matrixToCalculate.Determinant();
+
+            result.Should().BeApproximately(expectedValue, 0.1);
+        }
     }
 
     public class Matrix
     {
         public double[,] UpperTriangleMatrix { get; set; }
-        public double[,] LowerTriangleMatrix { get; set; }        
+        public double[,] LowerTriangleMatrix { get; set; }
+        public int Determinant { get; set; }
     }
 
     public class DiffrentSizeOfMarix : Exception
@@ -291,9 +304,9 @@ namespace tdd_kata.matrix
             }
         }
 
-        public static int[,] Transpose(this int[,] matrixToTranspose)
+        public static double[,] Transpose(this double[,] matrixToTranspose)
         {
-            var result = new int[matrixToTranspose.GetLength(1), matrixToTranspose.GetLength(0)];
+            var result = new double[matrixToTranspose.GetLength(1), matrixToTranspose.GetLength(0)];
 
             for (int i = 0; i < matrixToTranspose.GetLength(1); i++)
             {
@@ -307,31 +320,33 @@ namespace tdd_kata.matrix
             return result;
         }
 
-        public static int Determinant(this int[,] matrixToCalculate )
+        public static double Determinant(this int[,] matrixToCalculate )
         {
-            var result = 0;
+            var result = 0.0;
             
             if (matrixToCalculate.IsSquare())
             {  
                 if (matrixToCalculate.GetLength(0) == 1)
                 {
-                    result = matrixToCalculate[0, 0];
-                }
-                else if (matrixToCalculate.GetLength(0) == 2)
+                    result = (double)matrixToCalculate[0, 0];
+                }                
+                if (matrixToCalculate.GetLength(0) > 1)
                 {
-                    //to refactor
-                    result = (matrixToCalculate[0, 0] * matrixToCalculate[1, 1]) - (matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
-                }
-                else if (matrixToCalculate.GetLength(0) == 3)
-                {
-                    //to refactor 
-                    var firstValue = (matrixToCalculate[0,0] * matrixToCalculate[1,1] * matrixToCalculate[2,2]) + (matrixToCalculate[1,0] * matrixToCalculate[2,1] * matrixToCalculate[0,2])
-                        + (matrixToCalculate[2,0] * matrixToCalculate[0,1] * matrixToCalculate[1,2]);
+                    var matrix = matrixToCalculate.Decompose();
 
-                    var secondValue = (matrixToCalculate[0, 2] * matrixToCalculate[1, 1] * matrixToCalculate[2, 0]) + (matrixToCalculate[1, 2] * matrixToCalculate[2, 1] * matrixToCalculate[0, 0]) 
-                        + (matrixToCalculate[2, 2] * matrixToCalculate[1, 0] * matrixToCalculate[0, 1]);
+                    var lowerTriangleMatrixDeterminant = 1.0;
+                    for (int i = 0; i < matrix.LowerTriangleMatrix.GetLength(0); i++)
+                    {
+                        lowerTriangleMatrixDeterminant *= matrix.LowerTriangleMatrix[i, i];
+                    }
 
-                    result = firstValue - secondValue;
+                    var upperTriangleMatrixDeterminant = 1.0;
+                    for (int i = 0; i < matrix.UpperTriangleMatrix.GetLength(1); i++)
+                    {
+                        upperTriangleMatrixDeterminant *= matrix.UpperTriangleMatrix[i, i];
+                    }
+
+                    result = lowerTriangleMatrixDeterminant * upperTriangleMatrixDeterminant;
                 }
             }
             else
@@ -345,7 +360,7 @@ namespace tdd_kata.matrix
         public static double[,] Invert(this int[,] matrixToConvert)
         {
             double[,] result = new double[matrixToConvert.GetLength(0), matrixToConvert.GetLength(1)];
-            int determinant = matrixToConvert.Determinant();
+            double determinant = matrixToConvert.Determinant();
             if (matrixToConvert.IsSquare())
             {
                 if (determinant != 0)
@@ -354,11 +369,11 @@ namespace tdd_kata.matrix
                     {
                         for (int j = 0; j < matrixToConvert.GetLength(1); j++)
                         {
-                            result[i, j] = matrixToConvert.GetMinor(i, j).Determinant() * (1 / determinant);
+                            result[i, j] = Math.Pow(-1, i + j) * matrixToConvert.GetMinor(i, j).Determinant() * (1 / determinant);
                         }
                     }
 
-                    return result;
+                    return result.Transpose();
                 }
                 else
                 {
@@ -427,8 +442,7 @@ namespace tdd_kata.matrix
         {
             var result = new Matrix();
             double[,] upperTriangleMatrix = new double[matrixToDecompose.GetLength(0), matrixToDecompose.GetLength(1)];
-            double[,] lowerTriangleMatrix = new double[matrixToDecompose.GetLength(0), matrixToDecompose.GetLength(1)];
-            int numberOfUnknown = matrixToDecompose.GetLength(0) * matrixToDecompose.GetLength(0);
+            double[,] lowerTriangleMatrix = new double[matrixToDecompose.GetLength(0), matrixToDecompose.GetLength(1)];            
 
             for (int i = 0; i < lowerTriangleMatrix.GetLength(1); i++)
             {
@@ -456,7 +470,7 @@ namespace tdd_kata.matrix
                         {
                             tempSumToDelete += lowerTriangleMatrix[i, k] * upperTriangleMatrix[k, j];
                         }
-
+                        
                         lowerTriangleMatrix[i, j] = (1 / upperTriangleMatrix[j, j]) * (matrixToDecompose[i, j] - tempSumToDelete);
                     }
                 }
@@ -466,5 +480,6 @@ namespace tdd_kata.matrix
             result.LowerTriangleMatrix = lowerTriangleMatrix;
             return result;
         }
+        
     }
 }

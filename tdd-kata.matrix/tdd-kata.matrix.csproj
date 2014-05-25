@@ -52,6 +52,7 @@
     <Compile Include="BasicOperationsOnMatrixTest.cs" />
     <Compile Include="BasicOperationsOnVectorsTest.cs" />
     <Compile Include="BasicSolvingLinearEquationsTest.cs" />
+    <Compile Include="BasicSolvingNoLinearEquations.cs" />
     <Compile Include="NumericalIntegrationMethodsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
